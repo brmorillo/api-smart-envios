@@ -6,6 +6,7 @@ export interface ITracking extends Document {
   events: {
     timestamp: Date;
     status: string;
+    idStatus: number;
     location: string;
   }[];
 }
@@ -17,6 +18,7 @@ const TrackingSchema: Schema = new Schema({
     {
       timestamp: { type: Date, required: true },
       status: { type: String, required: true },
+      idStatus: { type: Number, required: true },
       location: { type: String, default: '' },
     },
   ],

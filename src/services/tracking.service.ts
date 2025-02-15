@@ -26,7 +26,7 @@ export async function getTrackingInfo(
   }
   try {
     const response = await axios.get(url, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `${token}` },
     });
     const data = CarriersTrackingResponseSchema.parse(response.data);
     return data;
@@ -53,7 +53,8 @@ function transformToTrackingDocument(
     return {
       timestamp: new Date(isoString),
       status: evt.Descricao,
-      location: '', // Não fornecido pela API;
+      idStatus: evt.idStatus, // incluído para comparação
+      location: '', // Não fornecido pela API
     };
   });
   return { trackingCode, carrier, events };
