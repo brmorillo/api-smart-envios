@@ -113,7 +113,7 @@ O fluxo da solução é o seguinte:
 2. **Inicie os contêineres:**
 
    ```bash
-   docker-compose up -d
+   docker-compose up -d --build
    ```
 
 3. **Ajuste a variável de ambiente `MONGO_URI` no seu `.env` para apontar para o MongoDB no Docker:**
