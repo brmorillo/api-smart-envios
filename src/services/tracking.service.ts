@@ -26,7 +26,7 @@ export async function getTrackingInfo(
   }
   try {
     const response = await axios.get(url, {
-      headers: { Authorization: `${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     const data = CarriersTrackingResponseSchema.parse(response.data);
     return data;
