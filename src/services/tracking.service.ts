@@ -4,8 +4,15 @@
  * validar a resposta e transformar os dados para armazenamento.
  */
 import { TrackingProviderFactory } from './tracking-provider.factory';
-import { CarriersTrackingResponse } from '../schemas/tracking.schema';
+import {
+  CarriersTrackingResponse,
+  CarriersTrackingResponseSchema,
+} from '../schemas/tracking.schema';
 import TrackingModel, { ITracking } from '../models/tracking.model';
+import redisClient from '../utils/cache';
+import logger from '../utils/logger';
+import { config } from '../config/config';
+import axios from 'axios';
 
 // Opção: definir o provedor via configuração (ou hardcode para "carriers")
 const providerType = 'carriers';
@@ -20,7 +27,35 @@ const trackingProvider = TrackingProviderFactory.getProvider(providerType);
 export async function getTrackingInfo(
   trackingCode: string,
 ): Promise<CarriersTrackingResponse> {
-  return await trackingProvider.getTrackingInfo(trackingCode);
+  const cacheKey = `tracking:${trackingCode}`;
+
+  // Tenta obter os dados do cache
+  const cachedData = await redisClient.get(cacheKey);
+  if (cachedData) {
+    logger.info(`Cache hit para o codigo ${trackingCode}`);
+    return JSON.parse(cachedData) as CarriersTrackingResponse;
+  }
+
+  // Caso não exista no cache, consulta a API
+  const url = `${config.apiUrlCarriers}/Tracking/${trackingCode}`;
+  const token = config.carriersApiToken.trim();
+  if (!token) {
+    throw new Error('Token de autorização não definido nas configurações.');
+  }
+  try {
+    const response = await axios.get(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = CarriersTrackingResponseSchema.parse(response.data);
+
+    // Armazena o resultado no cache com um TTL (por exemplo, 300 segundos)
+    await redisClient.setEx(cacheKey, 300, JSON.stringify(data));
+    logger.info(`Dados armazenados no cache para ${trackingCode}`);
+
+    return data;
+  } catch (error: any) {
+    throw new Error(`Erro ao consultar API de rastreamento: ${error.message}`);
+  }
 }
 
 /**

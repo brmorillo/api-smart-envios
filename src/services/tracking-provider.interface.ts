@@ -1,9 +1,9 @@
+import { CarriersTrackingResponse } from '../schemas/tracking.schema';
+
 /**
  * Interface para provedores de rastreamento.
  * Qualquer serviço de rastreamento deve implementar essa interface.
  */
-import { CarriersTrackingResponse } from '../schemas/tracking.schema';
-
 export interface ITrackingProvider {
   /**
    * Consulta o serviço de rastreamento e retorna os dados validados.
