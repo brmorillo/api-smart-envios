@@ -150,14 +150,3 @@ Contribuições são bem-vindas! Para contribuir:
 1. Faça um fork do repositório.
 2. Crie uma branch para sua feature: `git checkout -b minha-feature`
 3. Realize as alterações e envie um pull request.
-
-## Observações Finais
-
-- **Logging e Monitoramento:**
-  Atualmente, o projeto utiliza `console.log` para logs. Em produção, considere utilizar bibliotecas de logging robustas como [Winston](https://github.com/winstonjs/winston) ou [Pino](https://github.com/pinojs/pino).
-
-- **Testes Automatizados:**
-  Adicionar testes unitários e de integração pode aumentar a robustez da solução.
-
-- **Escalabilidade:**
-  A arquitetura modular facilita a integração com outros microsserviços, como consumidores de Kafka para notificações e dashboards.
