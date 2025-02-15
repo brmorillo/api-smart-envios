@@ -24,4 +24,5 @@ export const config = {
     process.env.API_URL_CARRIERS ||
     'http://api.carriers.com.br/client/Carriers',
   logLevel: process.env.LOG_LEVEL || 'info',
+  redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
 };
