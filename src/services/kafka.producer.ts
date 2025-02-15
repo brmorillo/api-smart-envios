@@ -1,13 +1,13 @@
 /**
  * Kafka Producer
- * Este módulo gerencia a conexão com o Kafka e a publicação de eventos de rastreamento.
+ * Gerencia a conexão com o Kafka e a publicação de eventos de rastreamento.
  */
 import { Kafka } from 'kafkajs';
+import { config } from '../config/config';
 
-// Inicializa o cliente Kafka usando as configurações definidas nas variáveis de ambiente
 const kafka = new Kafka({
   clientId: 'tracking-service',
-  brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+  brokers: [config.kafkaBroker],
 });
 
 const producer = kafka.producer();
@@ -28,16 +28,15 @@ export async function disconnectProducer() {
 
 /**
  * Publica um evento de rastreamento atualizado no Kafka.
- * @param trackingData - Dados de rastreamento a serem enviados, convertidos para JSON.
+ * @param trackingData - Dados de rastreamento a serem enviados.
  */
 export async function publishTrackingEvent(trackingData: any) {
-  const topic = process.env.KAFKA_TOPIC || 'tracking-events';
   await producer.send({
-    topic,
+    topic: config.kafkaTopic,
     messages: [
       {
-        key: trackingData.trackingCode, // Utiliza o código de rastreamento como chave
-        value: JSON.stringify(trackingData), // Converte os dados para string JSON
+        key: trackingData.trackingCode,
+        value: JSON.stringify(trackingData),
       },
     ],
   });
