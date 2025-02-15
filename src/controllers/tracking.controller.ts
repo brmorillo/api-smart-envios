@@ -1,3 +1,9 @@
+/**
+ * Controller de Rastreamento
+ * Este módulo define a rota HTTP para consultas on-demand de rastreamento.
+ * Ele recebe um código de rastreamento via query string, consulta a API externa,
+ * realiza o upsert no MongoDB e retorna o documento armazenado.
+ */
 import { Router, Request, Response, NextFunction } from 'express';
 import {
   getTrackingInfo,
@@ -6,6 +12,11 @@ import {
 
 export const trackingRouter = Router();
 
+/**
+ * GET /tracking?code=<trackingCode>
+ * Consulta a API de rastreamento e armazena/atualiza os dados no MongoDB.
+ * Retorna o documento de rastreamento armazenado.
+ */
 trackingRouter.get(
   '/',
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -18,7 +29,7 @@ trackingRouter.get(
         });
         return;
       }
-      // Consulta a API e faz o upsert no MongoDB
+      // Consulta a API e realiza o upsert no MongoDB
       const carriersData = await getTrackingInfo(code);
       const storedData = await upsertTrackingData(carriersData);
       res.json(storedData);

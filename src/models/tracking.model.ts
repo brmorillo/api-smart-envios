@@ -1,5 +1,10 @@
+/**
+ * Modelo Mongoose para Rastreamento
+ * Define a estrutura do documento de rastreamento armazenado no MongoDB.
+ */
 import mongoose, { Schema, Document } from 'mongoose';
 
+// Interface que descreve a estrutura de um documento de rastreamento
 export interface ITracking extends Document {
   trackingCode: string;
   carrier: string;
@@ -11,6 +16,7 @@ export interface ITracking extends Document {
   }[];
 }
 
+// Define o schema do Mongoose para rastreamento
 const TrackingSchema: Schema = new Schema({
   trackingCode: { type: String, required: true, unique: true },
   carrier: { type: String, required: true },
@@ -24,4 +30,5 @@ const TrackingSchema: Schema = new Schema({
   ],
 });
 
+// Exporta o modelo para ser utilizado na aplicação
 export default mongoose.model<ITracking>('Tracking', TrackingSchema);
