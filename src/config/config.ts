@@ -23,4 +23,5 @@ export const config = {
   apiUrlCarriers:
     process.env.API_URL_CARRIERS ||
     'http://api.carriers.com.br/client/Carriers',
+  logLevel: process.env.LOG_LEVEL || 'info',
 };

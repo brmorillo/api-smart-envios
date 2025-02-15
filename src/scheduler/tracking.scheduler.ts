@@ -11,6 +11,7 @@ import {
 } from '../services/tracking.service';
 import { publishTrackingEvent } from '../services/kafka.producer';
 import TrackingModel, { ITracking } from '../models/tracking.model';
+import logger from '../utils/logger';
 
 /**
  * Função auxiliar para obter o evento mais recente baseado no timestamp.
@@ -39,12 +40,12 @@ async function processTracking() {
       events: { $not: { $elemMatch: { idStatus: 101 } } },
     });
     if (pendingTrackings.length === 0) {
-      console.log('Nenhum rastreamento pendente para atualização.');
+      logger.info('Nenhum rastreamento pendente para atualizacao.');
       return;
     }
     for (const doc of pendingTrackings) {
       const code = doc.trackingCode;
-      console.log(`Processando rastreamento para ${code}`);
+      logger.info(`Processando rastreamento para ${code}`);
 
       // Consulta os dados atuais da API para este rastreamento
       const carriersData = await getTrackingInfo(code);
@@ -87,21 +88,21 @@ async function processTracking() {
 
       // Se houver alteração, publica um evento no Kafka
       if (hasChanged) {
-        console.log(
+        logger.info(
           `Status alterado para ${newLatest.status} no rastreamento ${code}, publicando evento no Kafka.`,
         );
         await publishTrackingEvent(updatedData);
-      } else {
-        console.log(`Nenhuma alteração no status para ${code}.`);
+        return;
       }
+      logger.info(`Nenhuma alteração no status para ${code}.`);
     }
   } catch (error: any) {
-    console.error(`Erro no processamento de rastreamentos: ${error.message}`);
+    logger.error(`Erro no processamento de rastreamentos: ${error.message}`);
   }
 }
 
 // Agenda a tarefa para ser executada a cada minuto
 cron.schedule('* * * * *', () => {
-  console.log('Executando tarefa agendada de rastreamento');
+  logger.info('Executando tarefa agendada de rastreamento');
   processTracking();
 });

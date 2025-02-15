@@ -4,6 +4,7 @@
  */
 import { Kafka } from 'kafkajs';
 import { config } from '../config/config';
+import logger from '../utils/logger';
 
 const kafka = new Kafka({
   clientId: 'tracking-service',
@@ -17,6 +18,7 @@ const producer = kafka.producer();
  */
 export async function connectProducer() {
   await producer.connect();
+  logger.info('Kafka Producer conectado');
 }
 
 /**
@@ -24,6 +26,7 @@ export async function connectProducer() {
  */
 export async function disconnectProducer() {
   await producer.disconnect();
+  logger.info('Kafka Producer desconectado');
 }
 
 /**
@@ -40,4 +43,7 @@ export async function publishTrackingEvent(trackingData: any) {
       },
     ],
   });
+  logger.info(
+    `Evento de rastreamento publicado para ${trackingData.trackingCode}`,
+  );
 }

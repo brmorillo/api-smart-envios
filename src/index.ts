@@ -12,14 +12,15 @@ import { connectProducer } from './services/kafka.producer';
 
 // Importa o scheduler para iniciar as tarefas periódicas
 import './scheduler/tracking.scheduler';
+import logger from './utils/logger';
 
 const app = express();
 
 // Conecta ao MongoDB usando a URI da configuração centralizada
 mongoose
-  .connect(config.mongoUri)
-  .then(() => console.log('Conectado ao MongoDB'))
-  .catch((err) => console.error('Erro ao conectar ao MongoDB:', err));
+  .connect(process.env.MONGO_URI || 'mongodb://localhost:27017/trackingdb')
+  .then(() => logger.info('Conectado ao MongoDB'))
+  .catch((err) => logger.error('Erro ao conectar ao MongoDB:', err));
 
 app.use(json());
 
@@ -27,6 +28,6 @@ app.use(json());
 app.use('/tracking', trackingRouter);
 
 app.listen(config.port, async () => {
-  console.log(`Servidor rodando na porta ${config.port}`);
+  logger.info(`Servidor rodando na porta ${config.port}`);
   await connectProducer(); // Conecta ao Kafka Producer
 });
