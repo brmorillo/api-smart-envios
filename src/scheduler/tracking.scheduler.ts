@@ -13,7 +13,7 @@ async function processTracking() {
   try {
     // Busca todos os rastreamentos que não tenham nenhum evento com idStatus 101 (entrega realizada)
     const pendingTrackings = await TrackingModel.find({
-      'events.idStatus': { $ne: 101 },
+      events: { $not: { $elemMatch: { idStatus: 101 } } },
     });
     if (pendingTrackings.length === 0) {
       console.log('Nenhum rastreamento pendente para atualização.');
