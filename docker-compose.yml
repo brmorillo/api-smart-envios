@@ -32,3 +32,21 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: QWp3dtwmT*m7hHQqdzuo82jYuuL@Ls
     ports:
       - '0.0.0.0:27017:27017'
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-smart-envios
+    ports:
+      - '3000:3000'
+    environment:
+      PORT: 3000
+      MONGO_URI: mongodb://root:QWp3dtwmT%2Am7hHQqdzuo82jYuuL%40Ls@mongodb:27017/trackingdb?authSource=admin
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: tracking-events
+      CARRIERS_API_TOKEN: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGkuY2FycmllcnMuY29tLmJyXC9jbGllbnRcL2xvZ2luIiwiaWF0IjoxNjAzMTIxOTM0LCJuYmYiOjE2MDMxMjE5MzQsImp0aSI6Im1XZ1NucmJDaDlYa08wbGkiLCJzdWIiOjExNzQwLCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIiwibmFtZSI6IkFQSSBTTUFSVCBFTlZJT1MiLCJ1c2VybmFtZSI6IkFQSS5TTUFSVEVOVklPUyJ9.DSln97XIpu2PMERsfQY5MjYKiGrQb6NDRh0KYtJ03Rs'
+      API_URL_CARRIERS: 'http://api.carriers.com.br/client/Carriers'
+    depends_on:
+      - mongodb
+      - kafka
