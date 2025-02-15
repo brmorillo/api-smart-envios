@@ -119,7 +119,7 @@ O fluxo da solução é o seguinte:
 3. **Ajuste a variável de ambiente `MONGO_URI` no seu `.env` para apontar para o MongoDB no Docker:**
 
    ```env
-   MONGO_URI=mongodb://root:QWp3dtwmT%2Am7hHQqdzuo82jYuuL%40Ls@localhost:27017/trackingdb?authSource=admin
+   MONGO_URI=mongodb://{user}:{pass}@{host}:{port}/{db}?authSource=admin
    ```
 
 4. **Inicie a aplicação.**
@@ -144,8 +144,6 @@ Crie um arquivo `.env` na raiz do projeto com as seguintes configurações (ajus
   ```
 
 ## Contribuição
-
-Contribuições são bem-vindas! Para contribuir:
 
 1. Faça um fork do repositório.
 2. Crie uma branch para sua feature: `git checkout -b minha-feature`
